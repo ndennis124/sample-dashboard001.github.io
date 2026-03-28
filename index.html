@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hypertrophy Training Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --surface: #161616;
+    --surface2: #1f1f1f;
+    --border: #2a2a2a;
+    --accent: #c8f04a;
+    --accent2: #f0a83a;
+    --text: #f0ede6;
+    --muted: #888;
+    --push: #f0a83a;
+    --pull: #4ab8f0;
+    --legs: #f04a7a;
+    --full: #c8f04a;
+    --rest: #555;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 40px 24px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 32px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .header-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 8vw, 92px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  h1 span { color: var(--accent); }
+
+  .header-sub {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 8px;
+    max-width: 600px;
+  }
+
+  /* WEEK GRID */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 48px;
+  }
+
+  .week-day {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .week-day.active { border-color: var(--accent); background: #1a1f0e; }
+  .week-day.optional { border-color: var(--accent2); background: #1f1a0e; }
+
+  .wd-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .wd-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+
+  .wd-type {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .week-day.active .wd-name { color: var(--accent); }
+  .week-day.optional .wd-name { color: var(--accent2); }
+
+  /* SECTION HEADERS */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 20px;
+    margin-top: 48px;
+  }
+
+  .section-header:first-of-type { margin-top: 0; }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+
+  /* DAY CARDS */
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .day-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .tag-push { background: #2e1f00; color: var(--push); }
+  .tag-pull { background: #001e2e; color: var(--pull); }
+  .tag-legs { background: #2e0010; color: var(--legs); }
+  .tag-full { background: #1a2100; color: var(--full); }
+  .tag-optional { background: #2a2000; color: var(--accent2); }
+  .tag-rest { background: #1f1f1f; color: var(--rest); }
+
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    flex: 1;
+  }
+
+  .day-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .toggle-icon {
+    color: var(--muted);
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+
+  .day-card.open .toggle-icon { transform: rotate(180deg); }
+
+  .day-body {
+    display: none;
+    padding: 0 20px 20px;
+  }
+
+  .day-card.open .day-body { display: block; }
+
+  /* WARM-UP */
+  .warmup-block {
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-top: 16px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .warmup-block strong {
+    color: var(--text);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* EXERCISE TABLE */
+  .ex-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .ex-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    text-align: left;
+    padding: 0 10px 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ex-table td {
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    vertical-align: top;
+  }
+
+  .ex-table tr:last-child td { border-bottom: none; }
+
+  .ex-name {
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .ex-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .ex-sets {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .ex-reps {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .ex-rest {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .compound-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-family: 'DM Mono', monospace;
+    background: #1a2100;
+    color: var(--accent);
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-left: 6px;
+    letter-spacing: 0.1em;
+    vertical-align: middle;
+  }
+
+  /* SCIENCE NOTES */
+  .science-box {
+    background: #1a2100;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: #a8c07a;
+  }
+
+  .science-box strong {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* CLIMBING NOTE */
+  .climbing-box {
+    background: #001a2e;
+    border-left: 3px solid var(--pull);
+    border-radius: 0 6px 6px 0;
+    padding: 14px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #6ab4d8;
+  }
+
+  .climbing-box strong {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--pull);
+    margin-bottom: 6px;
+  }
+
+  /* PRINCIPLES GRID */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .principle-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .p-icon { font-size: 20px; margin-bottom: 8px; }
+  .p-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .p-body { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .p-body strong { color: var(--text); }
+
+  /* NUTRITION */
+  .nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .nut-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .nut-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .nut-unit {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .nut-label {
+    font-size: 13px;
+    color: var(--text);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  .nut-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* FOOTER */
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  footer a {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  footer a:hover { color: var(--accent); }
+
+  /* SCROLL ANIMATION */
+  .day-card {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .day-card:nth-child(1) { animation-delay: 0.05s; }
+  .day-card:nth-child(2) { animation-delay: 0.10s; }
+  .day-card:nth-child(3) { animation-delay: 0.15s; }
+  .day-card:nth-child(4) { animation-delay: 0.20s; }
+  .day-card:nth-child(5) { animation-delay: 0.25s; }
+
+  @media (max-width: 600px) {
+    .week-grid { grid-template-columns: repeat(4, 1fr); }
+    .week-grid .week-day:nth-child(5),
+    .week-grid .week-day:nth-child(6),
+    .week-grid .week-day:nth-child(7) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-label">Evidence-Based · Hypertrophy · 4-Day Split</div>
+  <h1>BUILD<br><span>UPPER</span></h1>
+  <p class="header-sub">A balanced muscle-growth plan with upper body emphasis, structured around your Sun / Mon / Wed / Thu schedule. Informed by NASM, ACSM, and peer-reviewed research.</p>
+</header>
+
+<!-- WEEK OVERVIEW -->
+<div class="week-grid">
+  <div class="week-day active">
+    <div class="wd-label">Sun</div>
+    <div class="wd-name" style="color:var(--push)">Push</div>
+    <div class="wd-type">Chest · Shoulders · Tris</div>
+  </div>
+  <div class="week-day active">
+    <div class="wd-label">Mon</div>
+    <div class="wd-name" style="color:var(--pull)">Pull</div>
+    <div class="wd-type">Back · Biceps · Rear Delt</div>
+  </div>
+  <div class="week-day optional">
+    <div class="wd-label">Tue</div>
+    <div class="wd-name" style="color:var(--accent2)">Opt.</div>
+    <div class="wd-type">Core + Arms</div>
+  </div>
+  <div class="week-day active">
+    <div class="wd-label">Wed</div>
+    <div class="wd-name" style="color:var(--legs)">Legs</div>
+    <div class="wd-type">Quads · Hams · Glutes</div>
+  </div>
+  <div class="week-day active">
+    <div class="wd-label">Thu</div>
+    <div class="wd-name" style="color:var(--full)">Full</div>
+    <div class="wd-type">Upper Heavy + Legs</div>
+  </div>
+  <div class="week-day">
+    <div class="wd-label">Fri</div>
+    <div class="wd-name">Rest</div>
+    <div class="wd-type">Run / Stretch</div>
+  </div>
+  <div class="week-day">
+    <div class="wd-label">Sat</div>
+    <div class="wd-name">Rest</div>
+    <div class="wd-type">Active Recovery</div>
+  </div>
+</div>
+
+<!-- WORKOUT DAYS -->
+<div class="section-header">
+  <span class="section-num">01</span>
+  <h2>Weekly Workouts</h2>
+</div>
+
+<!-- DAY 1: PUSH -->
+<div class="day-card open">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-tag tag-push">Push</span>
+    <span class="day-title">Sunday — Chest, Shoulders & Triceps</span>
+    <span class="day-meta">~55 min</span>
+    <span class="toggle-icon">▾</span>
+  </div>
+  <div class="day-body">
+    <div class="warmup-block">
+      <strong>🔥 Warm-Up · 5–7 min</strong>
+      5 min light cardio (row or jog) → Arm circles, band pull-aparts (2×15), wall slides (2×10). Dynamic warm-up only; avoid static stretching pre-lift.
+    </div>
+    <table class="ex-table">
+      <thead>
+        <tr>
+          <th style="width:42%">Exercise</th>
+          <th>Sets</th>
+          <th>Reps</th>
+          <th>Rest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ex-name">Barbell or Dumbbell Bench Press <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Primary chest + anterior delt driver. Full ROM.</div></td>
+          <td class="ex-sets">4</td>
+          <td class="ex-reps">6–8</td>
+          <td class="ex-rest">2–3 min</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Incline DB Press <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Emphasizes upper chest. Keep shoulder blades retracted.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">8–12</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Dumbbell Overhead Press <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Seated or standing. Engage core throughout.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">8–10</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Cable or DB Lateral Raise</div><div class="ex-note">Medial delt isolation. Slight forward lean, slow eccentric.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">12–15</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Cable Fly or Pec Deck</div><div class="ex-note">Peak chest stretch at bottom. Control the eccentric.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">12–15</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Tricep Overhead Extension (Cable or DB)</div><div class="ex-note">Targets long head of tricep. Keep elbows close.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">10–12</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="science-box">
+      <strong>📖 Evidence Note</strong>
+      NASM recommends 15–20 working sets per muscle group per week for optimal hypertrophy. This push day delivers ~6 chest sets, ~6 shoulder sets, and ~3 tricep sets, to be paired with Thursday's volume for full weekly targets.
+    </div>
+  </div>
+</div>
+
+<!-- DAY 2: PULL -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-tag tag-pull">Pull</span>
+    <span class="day-title">Monday — Back, Biceps & Rear Delts</span>
+    <span class="day-meta">~55 min</span>
+    <span class="toggle-icon">▾</span>
+  </div>
+  <div class="day-body">
+    <div class="warmup-block">
+      <strong>🔥 Warm-Up · 5 min</strong>
+      Band pull-aparts (2×15), face pulls with band (2×15), cat-cow thoracic mobility (10 reps). Activate rotator cuff before heavy pulls.
+    </div>
+    <table class="ex-table">
+      <thead>
+        <tr>
+          <th style="width:42%">Exercise</th>
+          <th>Sets</th>
+          <th>Reps</th>
+          <th>Rest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ex-name">Pull-Ups or Lat Pulldown <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Full hang to chin-over-bar. Add weight when 3×8 is easy.</div></td>
+          <td class="ex-sets">4</td>
+          <td class="ex-reps">6–8</td>
+          <td class="ex-rest">2–3 min</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Barbell or DB Bent-Over Row <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Hip hinge, chest up. Drive elbow to hip, not shoulder.</div></td>
+          <td class="ex-sets">4</td>
+          <td class="ex-reps">8–10</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Single-Arm DB Row</div><div class="ex-note">Unilateral for imbalance correction. Heavy and controlled.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">10–12</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Face Pulls (Cable or Band)</div><div class="ex-note">External rotation at the top. Essential for shoulder health + rear delt.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">15–20</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Incline DB Curl</div><div class="ex-note">Full stretch at bottom, maximizes long-head bicep hypertrophy.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">10–12</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Hammer Curl</div><div class="ex-note">Targets brachialis + brachioradialis for arm thickness.</div></td>
+          <td class="ex-sets">2</td>
+          <td class="ex-reps">12–15</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="climbing-box">
+      <strong>🧗 Rock Climbing Month (~once/month)</strong>
+      On climbing days, treat it as your pull session — skip or significantly reduce this Monday workout to avoid overtraining forearms, biceps, and lats. Climbing is highly effective pulling stimulus and counts toward weekly back/arm volume.
+    </div>
+  </div>
+</div>
+
+<!-- DAY 2.5: OPTIONAL TUESDAY -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-tag tag-optional">Optional</span>
+    <span class="day-title">Tuesday — Core & Arms Finisher</span>
+    <span class="day-meta">~30 min</span>
+    <span class="toggle-icon">▾</span>
+  </div>
+  <div class="day-body">
+    <div class="warmup-block">
+      <strong>💡 When to use this day</strong>
+      Only add Tuesday if you feel recovered from Monday. This is a low-intensity accessory day — never go to failure. Skip entirely in weeks you feel fatigued or on climbing weeks.
+    </div>
+    <table class="ex-table">
+      <thead>
+        <tr>
+          <th style="width:42%">Exercise</th>
+          <th>Sets</th>
+          <th>Reps</th>
+          <th>Rest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ex-name">Plank Variations (RKC, side plank)</div><div class="ex-note">Anti-extension core stability. Quality over duration.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">30–45 sec</td>
+          <td class="ex-rest">45 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Dead Bug</div><div class="ex-note">Slow and controlled. Keep lower back flat throughout.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">8/side</td>
+          <td class="ex-rest">45 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Cable or Band Tricep Pushdown</div><div class="ex-note">Light pump work. 2 RIR minimum, don't go to failure.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">15–20</td>
+          <td class="ex-rest">45 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Preacher Curl or Concentration Curl</div><div class="ex-note">Isolation, slow eccentric. Good mind-muscle connection day.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">12–15</td>
+          <td class="ex-rest">45 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Pallof Press</div><div class="ex-note">Anti-rotation core. 2 sec pause at extension.</div></td>
+          <td class="ex-sets">2</td>
+          <td class="ex-reps">10/side</td>
+          <td class="ex-rest">45 sec</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DAY 3: LEGS -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-tag tag-legs">Legs</span>
+    <span class="day-title">Wednesday — Quads, Hamstrings & Glutes</span>
+    <span class="day-meta">~50 min</span>
+    <span class="toggle-icon">▾</span>
+  </div>
+  <div class="day-body">
+    <div class="warmup-block">
+      <strong>🔥 Warm-Up · 5–7 min</strong>
+      5 min bike or walk, then: glute bridges (2×15), bodyweight squats (2×15), leg swings (10 each), hip flexor stretch (30 sec each). Activate glutes before loading spine.
+    </div>
+    <table class="ex-table">
+      <thead>
+        <tr>
+          <th style="width:42%">Exercise</th>
+          <th>Sets</th>
+          <th>Reps</th>
+          <th>Rest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ex-name">Barbell Back Squat or Goblet Squat <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Full depth. Knees track over toes. Brace hard throughout.</div></td>
+          <td class="ex-sets">4</td>
+          <td class="ex-reps">6–8</td>
+          <td class="ex-rest">2–3 min</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Romanian Deadlift (RDL) <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Hip hinge pattern. Feel hamstring stretch at bottom. Bar close to body.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">8–10</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Bulgarian Split Squat</div><div class="ex-note">Rear foot elevated. Challenging but elite for glute/quad split. Start light.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">10/leg</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Leg Press (if available) or Step-Ups</div><div class="ex-note">High foot placement = more glute/hamstring emphasis.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">10–15</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Glute Bridge or Hip Thrust</div><div class="ex-note">Drive through heels. Squeeze glutes at top for 1 second.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">12–15</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Calf Raises (standing or seated)</div><div class="ex-note">Full stretch at bottom. Slow eccentric (3 sec down).</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">15–20</td>
+          <td class="ex-rest">45 sec</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="science-box">
+      <strong>🏃 Running Integration</strong>
+      Your 1–3 mile runs complement leg training well at this volume. Run on Fri or Sat (rest days) to avoid interfering with Wed leg recovery. If you run same day as legs, run after lifting — concurrent training research shows endurance before strength blunts muscle protein synthesis.
+    </div>
+  </div>
+</div>
+
+<!-- DAY 4: FULL BODY / UPPER HEAVY -->
+<div class="day-card">
+  <div class="day-header" onclick="toggle(this)">
+    <span class="day-tag tag-full">Full Body</span>
+    <span class="day-title">Thursday — Upper Heavy + Leg Accessory</span>
+    <span class="day-meta">~60 min</span>
+    <span class="toggle-icon">▾</span>
+  </div>
+  <div class="day-body">
+    <div class="warmup-block">
+      <strong>🔥 Warm-Up · 5 min</strong>
+      Foam roll lats + thoracic spine, band pull-aparts (2×15), shoulder CARs (5 each), hip hinges (10 reps). Today has heavy compound work — warm up specifically.
+    </div>
+    <table class="ex-table">
+      <thead>
+        <tr>
+          <th style="width:42%">Exercise</th>
+          <th>Sets</th>
+          <th>Reps</th>
+          <th>Rest</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><div class="ex-name">Deadlift (Conventional or Trap Bar) <span class="compound-badge">COMPOUND</span></div><div class="ex-note">King of full-body mass builders. Prioritize form — video yourself if new.</div></td>
+          <td class="ex-sets">4</td>
+          <td class="ex-reps">4–6</td>
+          <td class="ex-rest">3 min</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Weighted Dips or Close-Grip Bench <span class="compound-badge">COMPOUND</span></div><div class="ex-note">Chest + tricep compound. Add weight with a belt when bodyweight is easy.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">6–10</td>
+          <td class="ex-rest">2 min</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Chest-Supported DB Row</div><div class="ex-note">Takes lower back out of the equation. Focus on full lat stretch.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">10–12</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Arnold Press</div><div class="ex-note">Full shoulder rotation pattern. Hits all three delt heads.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">10–12</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Leg Extension (or Wall Sit) + Leg Curl</div><div class="ex-note">Accessory quad/hamstring work. Superset to save time.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">12–15</td>
+          <td class="ex-rest">60 sec</td>
+        </tr>
+        <tr>
+          <td><div class="ex-name">Farmer's Carry or Trap Bar Carry</div><div class="ex-note">60–100 ft. Trains grip, core, traps. Great metabolic finisher.</div></td>
+          <td class="ex-sets">3</td>
+          <td class="ex-reps">40 m walk</td>
+          <td class="ex-rest">90 sec</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="science-box">
+      <strong>📖 Evidence Note</strong>
+      Training each muscle group 2× per week is supported by research as optimal for hypertrophy when weekly volume is equated. This Thursday session doubles up on push and pull muscles first trained Sunday/Monday, hitting the 48-hour recovery window.
+    </div>
+  </div>
+</div>
+
+<!-- PRINCIPLES -->
+<div class="section-header" style="margin-top:48px">
+  <span class="section-num">02</span>
+  <h2>Evidence-Based Principles</h2>
+</div>
+
+<div class="principles-grid">
+  <div class="principle-card">
+    <div class="p-icon">📈</div>
+    <div class="p-title">Progressive Overload</div>
+    <div class="p-body">Add <strong>2.5–5 lbs to upper body</strong> and <strong>5–10 lbs to lower body</strong> lifts when you hit the top of a rep range for 2 consecutive sessions. This is the #1 driver of hypertrophy.</div>
+  </div>
+  <div class="principle-card">
+    <div class="p-icon">🔄</div>
+    <div class="p-title">Rep Range & Load</div>
+    <div class="p-body">ACSM recommends <strong>8–12 reps at 70–85% of 1RM</strong> for hypertrophy. Compound lifts stay in 6–8 range; isolation work goes 12–15. Both ranges drive growth.</div>
+  </div>
+  <div class="principle-card">
+    <div class="p-icon">⏸️</div>
+    <div class="p-title">Rest Intervals</div>
+    <div class="p-body"><strong>90 sec–3 min</strong> between compound sets; <strong>60–90 sec</strong> for isolations. Longer rests preserve strength output and drive more total volume per session.</div>
+  </div>
+  <div class="principle-card">
+    <div class="p-icon">⚠️</div>
+    <div class="p-title">Proximity to Failure</div>
+    <div class="p-body">Leave <strong>1–3 reps in reserve (RIR)</strong> on most sets. Train to true failure sparingly — it accelerates fatigue and risks injury without adding much extra stimulus.</div>
+  </div>
+  <div class="principle-card">
+    <div class="p-icon">🌙</div>
+    <div class="p-title">Deload Every 4–6 Weeks</div>
+    <div class="p-body">Cut volume by 40–50% for one week. Reduces accumulated fatigue and often results in <strong>strength PRs the week after</strong>. Non-negotiable for longevity.</div>
+  </div>
+  <div class="principle-card">
+    <div class="p-icon">🧗</div>
+    <div class="p-title">Climbing Integration</div>
+    <div class="p-body">Monthly climbing is excellent <strong>functional pulling volume</strong> — lats, biceps, forearms, core. On climbing weeks, skip or shorten Monday's pull session and reduce Tuesday entirely.</div>
+  </div>
+</div>
+
+<!-- NUTRITION -->
+<div class="section-header">
+  <span class="section-num">03</span>
+  <h2>Nutrition Targets</h2>
+</div>
+
+<div class="nutrition-grid">
+  <div class="nut-card">
+    <div class="nut-val">1.6–2.2</div>
+    <div class="nut-unit">g / kg bodyweight / day</div>
+    <div class="nut-label">Protein</div>
+    <div class="nut-sub">The undisputed #1 variable for muscle gain. Hit this daily.</div>
+  </div>
+  <div class="nut-card">
+    <div class="nut-val">+200–400</div>
+    <div class="nut-unit">calories above TDEE</div>
+    <div class="nut-label">Caloric Surplus</div>
+    <div class="nut-sub">Lean bulk range. More than this adds unnecessary fat.</div>
+  </div>
+  <div class="nut-card">
+    <div class="nut-val">7–9</div>
+    <div class="nut-unit">hours per night</div>
+    <div class="nut-label">Sleep</div>
+    <div class="nut-sub">Where muscle is actually built. Non-negotiable recovery tool.</div>
+  </div>
+  <div class="nut-card">
+    <div class="nut-val">3–5</div>
+    <div class="nut-unit">g / day</div>
+    <div class="nut-label">Creatine Monohydrate</div>
+    <div class="nut-sub">The most researched, effective, and safe supplement for hypertrophy.</div>
+  </div>
+</div>
+
+<footer>
+  <span>Sources: NASM, ACSM, Schoenfeld (2010), Science for Sport, PMC peer-reviewed literature</span>
+  <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8449772/" target="_blank">PMC: Time-Efficient Hypertrophy →</a>
+  <a href="https://www.scienceforsport.com/hypertrophy-training/" target="_blank">Science for Sport →</a>
+</footer>
+
+<script>
+  function toggle(header) {
+    const card = header.parentElement;
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
